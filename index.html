@@ -1,113 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mrp</title>
+    <title>MRP在线模拟器</title>
     <script src="./dist/mrp.js"></script>
     <script src="./public/js/nedb.min.js"></script>
     <script src="./public/js/localforage.min.js"></script>
     <script src="./public/js/vue.js"></script>
     <script src="./public/js/db.js"></script>
     <script src="./public/js/utils.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet">
     <style>
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .title {
+            font-size: 36px;
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .vmrp-link {
+            background: #007bff;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .vmrp-link:hover {
+            background: #0056b3;
+            color: white;
+            text-decoration: none;
+        }
+
+        .search-section {
+            display: flex;
+            flex-direction: column;
+        gap: 10px;
+        align-items: flex-end;
+        }
+
+        .search-input {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .main-content {
+            padding: 0 20px 20px 20px;
+        }
+
+        .pagination {
+            background: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            background: white;
+            background: transparent;  
+            padding: 15px;
+        }
+
         table {
+            border-collapse: separate;
+            border-spacing: 0 15px;  
+            width: 100%;
+            border: none;
+            width: 100%;
             border-collapse: collapse;
         }
 
-        table,
-        th,
-        td {
-            border: 1px solid black;
+        th {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #dee2e6;
         }
 
-        tr:nth-child(even) {
-            background-color: #e8e8e8;
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        tr {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
         }
 
         .red {
-            color: red;
+            color: #dc3545;
         }
+        .admin-checkbox-label {
+            margin: 0;
+            white-space: nowrap;
+    }
+    tbody tr {
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 15px;
+}
+
+tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+tbody tr td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+tbody tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-list li {
+    padding: 3px 0;
+    color: #666;
+    font-size: 14px;
+}
+thead tr {
+    background: transparent;
+    box-shadow: none;
+}
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
     </style>
 </head>
-
 <body>
     <div id="app">
-        <a href="./vmrp_v1.0/main.html">vmrp_v1.0</a>
-
-        <form onsubmit="return false" style="display: inline-block;">
-            <input id="search" type="text" autocomplete="off" />
-            <input type="submit" @click="search()" value="搜索" />
-        </form>
-        <input type="checkbox" id="showAdmin" v-model="admin"><label for="showAdmin">显示高级功能</label>
-        <input type="file" id="files" multiple style="display:none" />
-        <button @click="importFile()" v-if="admin">导入文件</button>
-        <button @click="downloadData()" v-if="admin">下载数据</button>
-
-        <div style="margin: 10px;">
-            <button @click="prev()">上页</button>
-            <button @click="next()">下页</button>
-            当前页:{{page}}/{{totalPage}} 每页显示:{{pageSize}} 总数:{{total}}
+        
+        
+        <div class="header">
+            <a href="./vmrp_v1.0/main.html" class="vmrp-link">VMRP 1.1</a>
+            <h1>MRP在线模拟器</h1>
+            <div class="search-section">
+                
+                
+                <div class="search-row">
+                    <input id="search" type="text" class="search-input" placeholder="搜索..." autocomplete="off" />
+                    <button @click="search()" class="btn btn-primary">搜索</button>
+                </div>
+                <div class="admin-row">
+                    <input type="checkbox" id="showAdmin" v-model="admin">
+                    <label for="showAdmin" class="admin-checkbox-label">显示高级功能</label>
+                    <div class="admin-controls" v-if="admin">
+                        <input type="file" id="files" multiple style="display:none" />
+                        <button @click="importFile()" class="btn btn-primary">导入文件</button>
+                        <button @click="downloadData()" class="btn btn-primary">下载数据</button>
+                    </div>
+                
+                    
+                    
+                </div>
+            </div>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>info</th>
-                    <th>FileName</th>
-                    <th>DisplayName</th>
-                    <th>Vendor</th>
-                    <th>Desc</th>
-                    <th>Appid</th>
-                    <th>Version</th>
-                    <th>BuilderVersion</th>
-                    <th>Screen</th>
-                    <th>Crc32</th>
-                    <th>Crc32OK</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in items">
-                    <td>
-                        <ul>
-                            <li>Len: {{item.MrpTotalLen}}</li>
-                            <li>Flag: {{item.Flag}}</li>
-                            <li>Plat: {{item.Plat}}</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <a v-if="admin" :href="'/viewMrp.html?f=/public/mrps/'+item.file">{{item.FileName}}</a>
-                        <span v-else>{{item.FileName}}</span>
-                    </td>
-                    <td>
-                        <a v-if="admin"
-                            :href="'/vmrp_v1.0/main.html?f=/public/temp/'+item.file+'&title='+item.DisplayName">{{item.DisplayName}}</a>
-                        <a v-else
-                            :href="'/vmrp_v1.0/main.html?f=/public/mrps/'+item.file+'&title='+item.DisplayName">{{item.DisplayName}}</a>
-                    </td>
-                    <td>{{item.Vendor}}</td>
-                    <td>{{item.Desc}}</td>
-                    <td>{{item.Appid}}</td>
-                    <td>{{item.Version}}</td>
-                    <td>{{item.BuilderVersion}}</td>
-                    <td>{{item.ScreenWidth}}x{{item.ScreenHeight}}</td>
-                    <td>{{item.Crc32}}</td>
-                    <td :class="{ red: !item.Crc32OK }">{{item.Crc32OK}}</td>
-                    <td>
-                        <button @click="del(item)" v-if="admin">删</button>
-                        <a :href="'/public/mrps/'+item.file" :download="item.file">下载</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
 
-        <div style="margin: 10px;">
-            <button @click="prev()">上页</button>
-            <button @click="next()">下页</button>
+        <div class="main-content">
+            <div class="pagination">
+                <div class="pagination-controls">
+                    <button @click="prev()" class="btn btn-primary">上一页</button>
+                    <button @click="next()" class="btn btn-primary">下一页</button>
+                </div>
+                <div class="page-info">
+                    当前页: {{page}}/{{totalPage}} | 每页: {{pageSize}} | 总数: {{total}}
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>信息</th>
+                            <th>文件名</th>
+                            <th>显示名称</th>
+                            <th>开发商</th>
+                            <th>描述</th>
+                            <th>应用ID</th>
+                            <th>版本</th>
+                            <th>构建版本</th>
+                            <th>屏幕</th>
+                            <th>CRC32</th>
+                            <th>校验</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in items">
+                            <td>
+                                <ul class="info-list">
+                                    <li>大小: {{item.MrpTotalLen}}</li>
+                                    <li>标记: {{item.Flag}}</li>
+                                    <li>平台: {{item.Plat}}</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <a v-if="admin" :href="'/viewMrp.html?f=/public/mrps/'+item.file">{{item.FileName}}</a>
+                                <span v-else>{{item.FileName}}</span>
+                            </td>
+                            <td>
+                                <a v-if="admin" :href="'/vmrp_v1.0/main.html?f=/public/temp/'+item.file+'&title='+item.DisplayName">{{item.DisplayName}}</a>
+                                <a v-else :href="'/vmrp_v1.0/main.html?f=/public/mrps/'+item.file+'&title='+item.DisplayName">{{item.DisplayName}}</a>
+                            </td>
+                            <td>{{item.Vendor}}</td>
+                            <td>{{item.Desc}}</td>
+                            <td>{{item.Appid}}</td>
+                            <td>{{item.Version}}</td>
+                            <td>{{item.BuilderVersion}}</td>
+                            <td>{{item.ScreenWidth}}x{{item.ScreenHeight}}</td>
+                            <td>{{item.Crc32}}</td>
+                            <td :class="{ red: !item.Crc32OK }">{{item.Crc32OK}}</td>
+                            <td>
+                                <button v-if="admin" @click="del(item)" class="btn btn-danger btn-sm">删除</button>
+                                <a :href="'/public/mrps/'+item.file" :download="item.file" class="btn btn-success btn-sm ms-1">下载</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <div class="pagination-controls">
+                    <button @click="prev()" class="btn btn-primary">上一页</button>
+                    <button @click="next()" class="btn btn-primary">下一页</button>
+                </div>
+                <div class="page-info">
+                    当前页: {{page}}/{{totalPage}} | 每页: {{pageSize}} | 总数: {{total}}
+                </div>
+            </div>
+            <div style="text-align: center;"><p>Designed by TIME OF TIME<p></div>
         </div>
     </div>
     <script src="./public/js/index.js"></script>
 </body>
-
 </html>
