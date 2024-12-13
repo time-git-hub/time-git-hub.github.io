@@ -8,103 +8,246 @@
     <style>
         * {
             user-select: none;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: arial;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: none;
+            padding: 0px;
+            background: #1a1a1a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
+       #main {
+        display: flex;
+        gap: 20px;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+  
+    .game-console {
+        background: #2a2a2a;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        flex: 0 0 auto;
+        width: 700px;
+    }
+
+    
+    .info-panel {
+        background: #2a2a2a;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        flex: 1;
+        
+        overflow-y: auto;
+    }
+
+    
+    .status-bar {
+        margin-bottom: 20px;
+    }
+
+    
+    #progress {
+        width: 100%;
+    }
+
+   
+    .info-panel p {
+        font-size: 14px;
+        margin: 10px 0;
+    }
+
+    
+    .import-section {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+   
+    @media (max-width: 1200px) {
         #main {
-            margin: auto;
+            flex-direction: column;
+        }
+        
+        .game-console {
             width: 100%;
-            max-width: 640px;
         }
+    }
 
-        #main>div:first-child {
-            text-align: center;
-        }
-
+       
         #screen {
+            background: #000;
+            padding: 10px;
+            border-radius: 10px;
+            border: 4px solid #444;
+            margin: 20px auto;
             position: relative;
+            width: fit-content;
         }
 
         #canvas {
-            /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-            position: relative;
             display: block;
-            left: 50%;
-            margin-left: -120px;
-            width: 240px;
-            height: 320px;
-            border: 0px none;
-            padding: 0;
-            background-color: black;
+            margin: 0 auto;
+            width: 320px;     
+            height: 480px; 
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0,255,0,0.2);
+            image-rendering: pixelated;
         }
 
-        #dialog {
+        
+        #keymap {
+            background: #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+
+        #keymap > div {
             display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            margin-left: -120px;
-            width: 240px;
-            height: 320px;
-            background-color: white;
-            visibility: hidden;
+            justify-content: space-evenly;
+            margin: 10px 0;
         }
 
-        #dialog h1 {
-            text-align: center;
-            margin: 0;
-            font-size: 1em;
-            border: 1px solid black;
-            border-bottom-color: transparent;
+        #keymap button {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            border: none;
+            background: #444;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #222;
+            transition: all 0.1s;
         }
 
-        #dialog textarea {
-            flex: 1;
-            width: 100%;
-            border: 1px solid black;
-            box-sizing: border-box;
-            overflow: auto;
-            outline: none;
-            resize: none;
+        #keymap button:active {
+            transform: translateY(4px);
+            box-shadow: none;
         }
 
-        #dialog .control {
-            display: flex;
-            justify-content: space-between;
+        
+        #key_ok {
+            background: #007bff !important;
         }
 
+        #key_star, #key_pound {
+            background: #dc3545 !important;
+        }
+
+        
+        #key_up, #key_down, #key_left, #key_right {
+            background: #28a745 !important;
+        }
+
+        
         #status {
-            height: 1em;
-            font-weight: bold;
-            color: rgb(120, 120, 120);
+            color: #00ff00;
+            text-align: center;
+            margin: 10px 0;
+            font-family: monospace;
         }
 
         #progress {
+            width: 100%;
             height: 20px;
-            width: 300px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
-        #keymap {
-            max-width: 400px;
-            margin: 30px auto;
+        #progress::-webkit-progress-bar {
+            background: #333;
         }
 
-        #keymap>div {
-            display: flex;
-            justify-content: space-evenly;
+        #progress::-webkit-progress-value {
+            background: linear-gradient(to right, #fffd8d, #daff0b);
         }
 
-        #keymap>div button {
-            line-height: 40px;
-            width: 40px;
-            margin: 5px;
-            outline: none;
+       
+        #dialog {
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            color: #00ff00;
+            font-family: monospace;
+        }
+
+        #dialog h1 {
+            background: #00ff00;
+            color: #000;
+            margin: 0;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #dialog textarea {
+            background: #000;
+            color: #00ff00;
+            border: none;
+            padding: 10px;
+            font-family: monospace;
+        }
+
+        #dialog .control {
+            padding: 10px;
+            background: #111;
+        }
+
+        #dialog button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+
+        
+        p {
+            color: #aaa;
+            line-height: 1.6;
+            margin: 20px 0;
+            padding: 20px;
+            background: #222;
+            border-radius: 10px;
+        }
+
+        a {
+            color: #00ff00;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        
+        #import {
+            background: #438eff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        #import:hover {
+            background: #00dd00;
         }
     </style>
     <script src="./midi.js"></script>
@@ -112,24 +255,23 @@
 
 <body>
     <div id="main">
-        <div>
+    
+    <div class="game-console">
+        
+        <div class="status-bar">
             <div id="status">Downloading...</div>
-            <progress value="0" max="100" id="progress"></progress>
+            <progress value="0" max="100" id="progress">play time</progress>
         </div>
+
+        
         <div id="screen">
             <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
-            <div id="dialog">
-                <h1>标题</h1>
-                <textarea></textarea>
-                <div class="control">
-                    <button id="dialogOk">确定</button>
-                    <span id="dialogInfo">0/0</span>
-                    <button id="dialogCancel">取消</button>
-                </div>
-            </div>
+            
         </div>
+
+        
         <div id="keymap">
-            <div>
+             <div>
                 <button id="key_sleft">=</button>
                 <button id="key_up">↑</button>
                 <button id="key_sright">=</button>
@@ -156,27 +298,75 @@
                 <button id="key_9">9</button>
                 <button id="key_pound">#</button>
             </div>
+
         </div>
-        <p>
-            按键： 0-9对应0-9键 &nbsp; &nbsp; &nbsp; <span style="color: red;">网页无法发短信，所以不可能产生付费，放心使用</span><br> 减号对应 * 键<br>
-            等号对应 # 键<br> 上下左右或wsad控制方向<br> 回车键：确认/选择/ok<br> q键或左中括号：左功能键<br> e键或右中括号:
-            右功能键<br> tab键：接听键<br> esc键：挂机键<br> 导入文件后不会刷新列表，你可以先打开一个app然后退出app这样就能刷新到<br>
-            注意！模拟器所有文件都是在内存中，刷新网页将导致恢复初始状态<br> MIDI播放采用的是简易的 <a href="https://github.com/chenx/MidiPlayer">MidiPlayer</a> 效果很一般<br><br> 本软件的开源地址是：<a href="https://github.com/zengming00/vmrp"
-                target="_blank">https://github.com/zengming00/vmrp</a><br>本软件采用GNU General Public License v3.0开源协议
-        </p>
-        <div>
+        <div style="text-align:center">
             <input type="file" id="files" multiple style="display:none" />
             <input type="button" id="import" value="导入文件" />
         </div>
     </div>
-    <script>
-        function GetQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return decodeURI(r[2]);
-            return null;
-        }
 
+   
+    <div class="info-panel">
+        <h2>操作说明</h2>
+        <p>
+            按键： 0-9对应0-9键<br>
+            <span style="color: red;">网页无法发短信，所以不可能产生付费，放心使用 <br>免责声明：网站内容请自行甄别</span><br>
+            减号对应 * 键<br>
+            等号对应 # 键<br>
+            上下左右或wsad控制方向<br>
+            回车键：确认/选择/ok<br>
+            q键或左中括号：左功能键<br>
+            e键或右中括号：右功能键<br>
+            tab键：接听键<br>
+            esc键：挂机键
+        </p>
+
+        <h2>注意事项</h2>
+        <p>
+            导入文件后不会刷新列表，你可以先打开一个app然后退出app这样就能刷新到<br>
+            注意！模拟器所有文件都是在内存中，刷新网页将导致恢复初始状态<br>
+            MIDI播放采用的是简易的 <a href="https://github.com/chenx/MidiPlayer">MidiPlayer</a> 效果很一般
+            <br>本网站仅供交流学习，怀旧冒泡的日子，请不要用于其他用途
+        </p>
+
+        
+
+        <p>
+            本软件的开源地址是：<br>
+            <a href="https://github.com/zengming00/vmrp" target="_blank">
+                https://github.com/zengming00/vmrp
+            </a><br>
+            本软件采用GNU General Public License v3.0开源协议
+            <br>感谢大佬开源此项目，让我能够美化此项目
+            <br>界面设计来自 TIME OF TIME
+            
+                                                                                             
+        </p>
+        
+        <div style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0px 0;
+">
+    <pre style="
+        color: #00ff00; 
+        font-family: monospace;
+        line-height: 1.2;
+        margin: 0;
+    ">
+   _____   ___   __  __   _____ 
+  |_   _| |_ _| |  \/  | | ____|
+    | |    | |  | |\/| | |  _|  
+    | |    | |  | |  | | | |___ 
+    |_|   |___| |_|  |_| |_____|
+                        
+    </pre>
+</div>
+    </div>
+    <script>
         const dialog = document.getElementById('dialog');
         const dialogTextarea = document.querySelector('#dialog textarea');
         const dialogTitle = document.querySelector('#dialog h1');
@@ -186,7 +376,27 @@
         const importBtn = document.getElementById('import');
         const inputFile = document.getElementById('files');
         const canvas = document.getElementById('canvas');
+        const midi = MidiPlayer();
+        const MR_SOUND_MIDI = 0;
+        const MR_SOUND_WAV = 1;
+        const MR_SOUND_MP3 = 2;
+        const MR_DIALOG_EVENT = 6;
+        const MR_DIALOG_KEY_OK = 0; // 对话框/文本框等的"确定"键被点击(选择);
+        const MR_DIALOG_KEY_CANCEL = 1; // 对话框/文本框等的"取消"("返回")键被点击(选择);
+        const MR_DIALOG_OK = 0; // 对话框有"确定"键;
+        const MR_DIALOG_OK_CANCEL = 1; // 对话框有"确定" "取消"键;
+        const MR_DIALOG_CANCEL = 2; // 对话框有"返回"键
+        const MR_EDIT_ANY = 0;
+        const MR_EDIT_NUMERIC = 1;
+        const MR_EDIT_PASSWORD = 2;
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return decodeURI(r[2]);
+            return null;
+        }
 
+        
         importBtn.addEventListener("click", function (ev) {
             inputFile.click();
         });
@@ -205,10 +415,7 @@
             }
         });
 
-        const midi = MidiPlayer();
-        const MR_SOUND_MIDI = 0;
-        const MR_SOUND_WAV = 1;
-        const MR_SOUND_MP3 = 2;
+        
         function js_playSound(type, data, dataLen, loop) {
             if (type == MR_SOUND_MIDI) {
                 const buf = Module.HEAPU8.slice(data, data + dataLen);
@@ -256,15 +463,7 @@
             return 0;
         }
 
-        const MR_DIALOG_EVENT = 6;
-        const MR_DIALOG_KEY_OK = 0; // 对话框/文本框等的"确定"键被点击(选择);
-        const MR_DIALOG_KEY_CANCEL = 1; // 对话框/文本框等的"取消"("返回")键被点击(选择);
-        const MR_DIALOG_OK = 0; // 对话框有"确定"键;
-        const MR_DIALOG_OK_CANCEL = 1; // 对话框有"确定" "取消"键;
-        const MR_DIALOG_CANCEL = 2; // 对话框有"返回"键
-        const MR_EDIT_ANY = 0;
-        const MR_EDIT_NUMERIC = 1;
-        const MR_EDIT_PASSWORD = 2;
+        
 
         function dialogRelease() {
             dialog.style.visibility = 'hidden';
@@ -483,9 +682,7 @@
             canvas: (function () {
                 var canvas = document.getElementById('canvas');
 
-                // As a default initial behavior, pop up an alert when webgl context is lost. To make your
-                // application robust, you may want to override this behavior before shipping!
-                // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
+                
                 canvas.addEventListener("webglcontextlost", function (e) {
                     alert('WebGL context lost. You will need to reload the page.');
                     e.preventDefault();
@@ -501,7 +698,7 @@
                 if (text === Module.setStatus.last.text) return;
                 var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
                 var now = Date.now();
-                if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
+                if (m && now - Module.setStatus.last.time < 30) return; 
                 Module.setStatus.last.time = now;
                 Module.setStatus.last.text = text;
                 if (m) {
@@ -509,8 +706,11 @@
                     progressElement.value = parseInt(m[2]) * 100;
                     progressElement.max = parseInt(m[4]) * 100;
                     progressElement.style.visibility = 'visible';
+                    
                 } else {
                     progressElement.style.visibility = 'hidden';
+                    
+                    
                 }
                 statusElement.innerHTML = text;
             },
@@ -522,7 +722,7 @@
         };
         Module.setStatus('Downloading...');
         window.onerror = function (event) {
-            // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+            
             Module.setStatus('Exception thrown, see JavaScript console');
             Module.setStatus = function (text) {
                 if (text) Module.printErr('[post-exception status] ' + text);
