@@ -1,7 +1,3 @@
-# zengming00.github.io
-***
-```js
-console.log('helloworld');
-```
-## null
-
+#部署
+可以下载源码在本地，然后通过安装node利用npm安装http-server部署，在根目录运行命令http-server ./运行项目
+也可以直接fork，然后创建page，建议要部署在与用户名相同的仓库，这样旧不会有路径问题，这个我是踩坑了，配置路径花了好长时间
